@@ -1,9 +1,12 @@
+import java.lang.annotation.*;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.*;
 
 public class Main {
-    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, NoSuchFieldException {
-        Entity entity = new Entity(2,"");
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException {
+        Entity entity = new Entity();
         Class clss = entity.getClass();
+//        clss=Class.forName("Entity");Entity.class.getName();
         int number = entity.getNumber();
         String name = "";
         System.out.println(number + " " + name);
@@ -31,27 +34,40 @@ public class Main {
 
         Field field = clss.getDeclaredField("number");
         field.setAccessible(true);
-        field.setInt(entity ,2);
-        System.out.println("num: "+ " " +field.get(entity));
+        field.setInt(entity, 2);
+        System.out.println("num: " + " " + field.get(entity));
 
         Constructor[] constructors = clss.getDeclaredConstructors();
-        for(Constructor constructor: constructors){
-            System.out.println("Constr : " + " " +constructor.getName());
+        for (Constructor constructor : constructors) {
+            System.out.println("Constr : " + " " + constructor.getName());
         }
 
-
-
+        Annotation[] annotations = clss.getDeclaredAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof Secured) {
+                Secured myAnnot = (Secured) annotation;
+                System.out.println("name: " + myAnnot.str() + " " + "value: " + myAnnot.val());
+            }
+        }
     }
 
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Secured {
+        String str();
+        int val();
+    }
+
+    @Secured(str = "My annot", val = 1)
     public static class Entity {
         private int number;
         private String name = "Awesome";
 
-        public Entity(int number, String name) {
-            this.number = number;
-            this.name = name;
-        }
-
+//        public Entity(int number, String name) {
+//            this.number = number;
+//            this.name = name;
+//        }
+        @Secured(str = "My annot", val = 2)
         private int getNumber() {
             return number;
         }
