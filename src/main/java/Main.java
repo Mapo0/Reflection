@@ -42,17 +42,29 @@ public class Main {
             System.out.println("Constr : " + " " + constructor.getName());
         }
 
-        Annotation[] annotations = clss.getDeclaredAnnotations();
+        Annotation[] annotations = clss.getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation instanceof Secured) {
                 Secured myAnnot = (Secured) annotation;
-                System.out.println("name: " + myAnnot.str() + " " + "value: " + myAnnot.val());
-            }
+            System.out.println("Class annot" + " " + myAnnot);
         }
+        }
+
+
+//        for (Method method : methods) {
+//        Annotation[] annotations = method.getAnnotations();
+//        for (Annotation annotation : annotations) {
+//            if (annotation instanceof Secured) {
+//                Secured myAnnot = (Secured) annotation;
+//                System.out.println("name: " + myAnnot.str() + " " + "value: " + myAnnot.val());
+//            }
+//        }
+//        }
     }
 
 
     @Retention(RetentionPolicy.RUNTIME)
+//    @Target(ElementType.METHOD)
     @interface Secured {
         String str();
         int val();
@@ -63,10 +75,11 @@ public class Main {
         private int number;
         private String name = "Awesome";
 
-//        public Entity(int number, String name) {
-//            this.number = number;
-//            this.name = name;
-//        }
+        @Secured(str = "My ", val = 3)
+    public static class ASD{
+
+    }
+
         @Secured(str = "My annot", val = 2)
         private int getNumber() {
             return number;
@@ -79,7 +92,7 @@ public class Main {
         public void setName(String name) {
             this.name = name;
         }
-
+        @Secured(str = "My second annot" , val = 3)
         private void printData() {
             System.out.println(number + name);
         }
